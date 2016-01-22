@@ -29,8 +29,7 @@ Exercise 2:
 
 4. time mv afs/nd.edu/user19/eobaditc/pixmaps /tmp/eobaditc-pixmaps	
 	time: .135 s  
-	This command takes longer because the file is being moved to the temporary bin which contains the scratch space.  This directory often has a lot of clutter in it so the computer could take a while to find sufficient memory.  
-
+	This command takes longer because the file is not being moved to a local folder, like it was above. 
 5. time rm /tmp/eobaditc-pixmaps
 	time: 0s
 	This command basically took no time because the computer does not need to find a memory space to delete a file. 
