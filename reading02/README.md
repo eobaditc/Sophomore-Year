@@ -8,7 +8,7 @@ Reading 02
 3. /sbin/ifconfig -a 
 	inet addr: 192.168.1.75
 
-4. ping command which checks if the host is alive 
+4. ping [hostname] command which checks if the host is alive 
 
 5. scp command which uses ssh for data transfer
 
