@@ -19,7 +19,7 @@ char *sanitize_string(char *s) {
 	reader++;
     }
     
-     
+    *writer = 0;  
     return sanitized;     
 
 }
