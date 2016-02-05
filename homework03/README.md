@@ -41,6 +41,7 @@ $ valgrind --leak-check=summary is_palindrome<is_palindrome.input
 Invalid Memory Access:
 	The malloc'd size did not account for the null character so I added a '+1' to the malloc.  Ex: malloc(strlen(s)+1).  I found this using valgrind and also through class lecture. ' 
 	I also used the valgrind command  and saw that the error was in everyline that called *back.  *back points to the end of the string passed to is_palindrome.  Since the function was invalidly accesing memory I assumed that the pointer as either going too far or not far enough.  After trying s + strlen(s) +1 I then concluded that the proper *back should = s + strlen(s) -1.  
+	Additionally, *writer needed to be set back to 0 at the end of the sanitize function to ensure that no memory is accessed unintentially.  
 
    The debugged program compiles with no errors or warnings and the is_palindrome.input matches the is_palindrome.output
 
