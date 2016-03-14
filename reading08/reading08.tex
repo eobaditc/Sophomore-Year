@@ -1,0 +1,80 @@
+\documentclass[letterpaper]{article}
+
+\title{Reading 08: Document Tools}
+\date{}
+\author{Emily Obaditch}
+
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage[margin=1in]{geometry}
+
+\begin{document}
+
+\maketitle
+
+%-----------------------------------------------------------------
+
+\section*{Overview}
+
+For this experiment I created {\bf three} scripts: 
+
+1. \verb|roll_dice.sh:| This script simulates rolling a dice. 
+
+2. \verb|experiment.sh:| This script uses \verb|roll_dice.sh| to perform an experiment and then colect that data into \verb|results.dat|. 
+
+3. \verb|histogram.plt:| This script uses gnuplot to create a graph of the data in \verb|results.dat|. 
+
+%---------------------------------------------------------------
+
+\section*{Rolling Dice}
+
+First I created a script called \verb|roll_dice.sh| that uses the shuf command to simulate rolling a die with a certain number of {\it sides} for a specified amout of {\it rolls}. 
+
+\begin{verbatim}
+
+    $ ./roll_dice.sh -h 
+    usage: roll_dice.sh [-r ROLLS -s SIDES] 
+
+    -r ROLLS    Number of rolls of die (default: 10)
+    -s SIDES    Number of sides on die (default: 6)
+
+\end{verbatim}
+
+%-----------------------------------------------------------------------
+
+\section*{Experiment}
+
+Second, I created a script called \verb|experiment.sh| that uses \verb|roll_dice.sh| to simulate rolling a {\bf six}-sided die 1000 times.  My script uses \verb|awk| to collect the results into a single file called \verb|results.dat|. 
+
+%----------------------------------------------------------------------
+
+\section*{Results}
+
+Table 1 contains the results of my experiment of rolling a dice 1000 times: 
+
+\begin{table}[h!]
+    \centering 
+    \begin{tabular}{c||c}
+    Side & Counts\\
+    \hline
+    1 & 149\\
+    2 & 166\\
+    3 & 179\\
+    4 & 174\\
+    5 & 174\\
+    6 & 158\\
+    \end{tabular}
+    \caption{Dice Rolling Results}
+    \label{tbl:rolls}
+\end{table}
+
+Figure 1 contains a plot of my experimental results produced by \verb|histogram.plt:|
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=5in]{results.png}
+\caption{Dice Rolling Results}
+\label{fig:histogram}
+\end{figure}
+
+\end{document}
