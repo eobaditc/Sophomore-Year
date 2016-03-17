@@ -1,0 +1,182 @@
+\documentclass{article} 
+
+\usepackage[utf8]{inputenc} 
+
+\title{Homework 06: Document Tools} 
+
+\author{Emily Obaditch} 
+\date{March 18 2016} 
+\usepackage{natbib} 
+\usepackage{graphicx} 
+\usepackage[margin=1in]{geometry} 
+
+\begin{document} 
+
+\maketitle 
+
+\section*{Overview}
+    For this assignment I chose to represent the distribution of gender 
+/ ethnicity using percentages rather than raw numbers.  I chose to do 
+this because there are different amounts of students per year and the 
+histogram could looked skewed if not all in the same scope.  I first 
+processed the \verb|demographics.csv| file with the 
+\verb|demographics.sh| shell script.  This script sums the total of each 
+catagory for each year (i.e. Male, Female, Caucasion, Oriental, etc...)  
+From this I used two other shell scripts \verb|race.sh| and 
+\verb|gender.sh| to calculate percentages of each category.  With this 
+data I then used gnuplot to graph clustered histograms with a legend.  
+Each shell script \verb|race.sh| and \verb|gender.sh| create a 
+\verb|resultsRace.dat| or \verb|resultsGender.dat| file which is how I 
+obtained values for the table.
+    In doing this assignment I noticed that while the gender 
+distribution leans strongly towards male, the ethnic distribution is in 
+similar accordance with that of the university.  As the years have gone 
+by there is a slight increase in the female population of Computer 
+Science majors.  I learned that data can be represented in many 
+different ways.  I found that the easiest way to see trends among groups 
+of people was a histogram as it graphics multiple categories on one 
+figure.  My main takeaway from this assignment is that the major is 
+lacking in diversity however showing a positive trend for future years.
+    
+\section*{Methodology}
+    I first processed the \verb|demographics.csv| file using the script 
+\verb|demographics.sh|.  This script uses a for loop to go through each 
+field in the file (using a comma as the delimiter).  The for loop 
+changes that flag used in the cut command.  The script counts the amount 
+of a certain character using grep and wc -l.  A variable is set for each 
+gender and ethnicity and the totals are displayed at the end of each 
+iteration.  For example, when counting how many student were male the 
+line:
+    \begin{verbatim}
+    Male=$(cat demographics.csv | cut -d , $cFlag | grep -o 'M' | wc-l)
+    \end{verbatim}
+    The final output of \verb|demographics.sh| is the total number of 
+each category for each year, separated by commas.  Next, I wrote two 
+more scripts \verb|gender.sh| and \verb|race.sh|.  Both of these scripts 
+call \verb|demographics.sh|. The \verb|gender.sh| script deletes the 
+first row of output from \verb|demographics.sh| which contains the 
+category titles.  I then used cut and awk to calculate the percentages 
+of male and female for every year using the following line:
+    \begin{verbatim}
+        ./demographics.sh | sed 1d | cut -d , -f 1-3 | awk 'BEGIN { FS = 
+"," };
+                {percentM=100* ( $2 / ($3 + $2))};
+                {percentF=100* ( $3 / ($3 + $2))};
+                {print $1"\t"percentM"\t"percentf}' > resultsGender.dat
+    \end{verbatim}
+        The output is sent to resultsGender.dat to be used later when 
+plotting.
+    
+    
+    \verb|Race.sh| uses the same method but with more categories.  The 
+command used in this script is:
+    \begin{verbatim}
+        ./demographics.sh | sed 1d| cut -d , -f 1,4-10 | awk 'BEGIN { FS 
+= "," };
+            { sum = $2+$3+$4+$5+$6+$7+$8};
+            { percentC=100* ( $2 / sum)};
+            { percentO=100* ( $3 / sum)};
+            { percentS=100* ($4 / sum)};
+            { percentB=100* ($5 / sum)};
+            { percentN=100* ($6/sum)};
+            { percentM=100* ($7 / sum)};
+            { percentU=100* ($8 / sum)};
+            { print $1 "\t" percentC "\t" percentO "\t" percentS "\t" 
+percentB
+    "\t" percentN "\t" percentM "\t" percentU }' > resultsRace.dat
+    \end{verbatim}
+        The output is sent to resultsRace.dat to be used later when 
+plotting.
+    
+    Gnuplot is used to create histograms for the gender distribution and 
+the ethnicity distribution.  The style is set to clustered histogram 
+which creates a histogram of multiple bars.  Each year is used as the 
+xticlabel.  A key is set using the command \verb|set key top right|.  
+The legend labels are create by specifying the title for each line after 
+the plot command is run, i.e:
+    \begin{verbatim}
+        plot 'resultsGender.dat' using 2:xticlabels(1) title "Male", '' 
+using 3:xticlabels(1) title "Female"
+    \end{verbatim}
+        A similar command is used for creating the ethnicity histogram.
+        
+\section*{Analysis}
+    From looking at Tables 1-2 and Figures 1-2 it can be concluded that 
+the majority of the Computer Scientists at Notre Dame are male and 
+Caucasian.  As seen in Table 1, the range of male percentage is 71-78\% 
+and the range of female percentage is 22-28\%.  The histogram in Figure 
+1 shows that as the years progress the distribution becomes more and 
+more even, a trend that I hope to see continue as a woman in the field.
+    
+    The ethnic diversity in the Computer Science Engineering major is 
+surprising.  As seen in the histogram the majority of the major for 
+every year is Caucasian.  The second most prominent ethnicity's are 
+Oriental and Hispanic.  Table 2 shows the exact percentages.  In most 
+years 0\% of Computer Science majors identified as undeclared or 
+multiple.  Figure 2 and Table 2 bring to light the lack of diversity 
+within the major however show an improving trend. \begin{table}[h!]
+    \centering
+    \begin{tabular}{|c||c|c|}\hline
+     Year & Male & Female\\\hline
+     2013 & 77.8 & 22.2 \\\hline
+     2014 & 78.6 & 21.4\\\hline
+     2015 & 78.4 & 21.6\\\hline
+     2016 & 75.9 & 24.1\\\hline
+     2017 & 71.4 & 28.6\\\hline
+     2018 & 71.4 & 28.6\\\hline
+    \end{tabular}
+    \caption{Gender Distribution (\%)}
+    \label{tab:my_label} \end{table} \begin{table}[h!]
+    \centering
+    \begin{tabular}{|c||c|c|c|c|c|c|c|}\hline
+        Year & Caucasian & Oriental & Hispanic & African American & 
+Native American & Multiple & Undeclared\\\hline
+        2013 & 68.2&11.1&11.1&4.7&1.6&3.2&0\\\hline
+        2014 & 76.8&8.9&7.1&3.5&1.78&1.78&0\\\hline
+        2015 & 63.5&12.2&13.5&5.4&1.4&1.4&2.7\\\hline
+        2016 & 67 & 11.4 & 11.4 & 1.3 & 8.8 & 0&0\\\hline
+        2017 & 65.9& 13.2&3.3&5.5&5.5&6.6&0\\\hline
+        2018 & 72.2& 6.4& 9.5 & 2.4 & 32 & 6.4& 0 \\\hline
+    \end{tabular}
+    \caption{Ethnic Distribution (\%)}
+    \label{tab:my_label} 
+    \end{table} 
+    \begin{figure}[H] 
+        \centering 
+
+        \includegraphics[width=5in]{resultsGender.png} \caption{Gender 
+Distribution} 
+        \label{fig:gender} 
+        \end{figure} 
+
+\begin{figure}[H] 
+    \centering 
+    \includegraphics[width=5in]{resultsRace.png} 
+    \caption{Ethnicity Distribution} 
+    \label{fig:ethnicity} 
+\end{figure} 
+
+\section*{Discussion}
+    As a woman, the issues of gender and ethnicity are very important to 
+me.  I myself have never been intimidated by the strong male presence in 
+the engineering field however still believe that more girls should be in 
+the program.  I think that the department should try to increase 
+diversity (both gender and ethnicity) through out reach programs to 
+young girls and inner cities.  I think exposure to Computer Science and 
+Engineering at a young age could do wonders for the diversity in the 
+field.  As for the industry, I do not think that a firm should hire a 
+computer scientist solely on ethnicity or gender.  I think that if 
+universities get better diversity in the major then there will only be 
+competition for jobs based on skill rather than on race or gender.
+    I have experienced a very welcoming environment fro the department 
+of Computer Science and Engineering.  Each faculty member is wholly 
+inclusive no mater what ethnicity or gender a student it.  However I 
+have noticed that when choosing groups male students tend to gravitate 
+towards other males and will only be in a group with girls if they know 
+the girl and know that she "is smart enough."  I find this extremely 
+problematic.  This is really the only challenge I have faced so far in 
+terms of diversity.  This can be improved by making sure groups are well 
+balanced or assigning project groups instead of letting the students 
+pick.  Overall though I do believe that the department provides a 
+welcoming environment for all types of students. 
+\end{document}
