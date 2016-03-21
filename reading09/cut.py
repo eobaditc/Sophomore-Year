@@ -72,5 +72,4 @@ for path in args:
             multList[2]=temp
             print (DELIM.join(multList))
             multList=[]
-            count=0
 stream.close()
